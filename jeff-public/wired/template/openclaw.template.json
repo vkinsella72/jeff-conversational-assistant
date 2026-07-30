@@ -1,0 +1,202 @@
+{
+  "meta": {
+    "template": "generic-jeff-v1",
+    "lastTouchedVersion": "openclaw-2026.7+",
+    "notes": "Drop this into ~/.openclaw/openclaw.json and edit the placeholders. Path placeholders use ${HOME} and ${USER} which the gateway expands at load time. Replace the model list with whatever you have pulled in Ollama."
+  },
+  "agents": {
+    "defaults": {
+      "bootstrapMaxChars": 20000,
+      "bootstrapTotalMaxChars": 150000,
+      "contextInjection": "always",
+      "memorySearch": {
+        "fallback": "none",
+        "model": "nomic-embed-text",
+        "provider": "ollama",
+        "remote": {
+          "apiKey": "ollama-local",
+          "baseUrl": "http://127.0.0.1:11434/v1",
+          "nonBatchConcurrency": 2
+        }
+      },
+      "model": {
+        "fallbacks": [
+          "ollama/qwen3.5:cloud",
+          "ollama/gemma4:31b-cloud",
+          "ollama/glm-5.1:cloud"
+        ],
+        "primary": "ollama/<your-primary-model>:cloud"
+      },
+      "models": {
+        "ollama/qwen3.5:cloud": {},
+        "ollama/gemma4:31b-cloud": {},
+        "ollama/glm-5.1:cloud": {}
+      },
+      "sandbox": {
+        "mode": "off"
+      },
+      "workspace": "${HOME}/.openclaw/workspace"
+    }
+  },
+  "bindings": [
+    {
+      "agentId": "main",
+      "match": {
+        "accountId": "default"
+      }
+    }
+  ],
+  "channels": {
+    "telegram": {
+      "allowFrom": [
+        "<your-telegram-user-id>"
+      ],
+      "botToken": "<your-telegram-bot-token>",
+      "dmPolicy": "allowlist",
+      "enabled": false,
+      "groupAllowFrom": [
+        "<your-telegram-user-id>"
+      ],
+      "groupPolicy": "allowlist",
+      "groups": {
+        "*": {
+          "requireMention": true
+        }
+      },
+      "name": "Jeff"
+    }
+  },
+  "env": {
+    "vars": {
+    }
+  },
+  "gateway": {
+    "bind": "lan",
+    "mode": "local",
+    "port": 18789,
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    },
+    "auth": {
+      "mode": "token",
+      "token": "<set-on-first-install-or-leave-default>"
+    },
+    "controlUi": {
+      "allowedOrigins": [
+        "http://127.0.0.1:18789"
+      ]
+    }
+  },
+  "mcp": {
+    "servers": {
+      "jeff-a2a": {
+        "command": "python3",
+        "args": [
+          "${HOME}/.openclaw/workspace/scripts/jeff_a2a_server.py",
+          "--spec",
+          "${HOME}/.openclaw/workspace",
+          "--model",
+          "ollama/<your-primary-model>:cloud",
+          "--model-endpoint",
+          "http://127.0.0.1:11434",
+          "--port",
+          "3001",
+          "--label",
+          "jeff"
+        ],
+        "env": {},
+        "autostart": true,
+        "description": "Jeff as an A2A-callable agent (generic-Jeff v1).",
+        "tags": ["jeff", "a2a", "agent"]
+      }
+    }
+  },
+  "messages": {
+    "groupChat": {
+      "visibleReplies": "message_tool"
+    },
+    "tts": {
+      "auto": "off",
+      "provider": "system",
+      "providers": {
+        "system": {
+          "enabled": true
+        }
+      }
+    }
+  },
+  "plugins": {
+    "allow": [
+      "browser",
+      "web-search-plus-plugin-v2",
+      "ollama",
+      "memory-core",
+      "telegram"
+    ],
+    "bundledDiscovery": "compat",
+    "entries": {
+      "memory-core": {
+        "config": {
+          "dreaming": {
+            "enabled": true
+          }
+        },
+        "enabled": true
+      },
+      "ollama": {
+        "config": {},
+        "enabled": true
+      },
+      "telegram": {
+        "enabled": false
+      },
+      "web-search-plus-plugin-v2": {
+        "config": {},
+        "enabled": true
+      }
+    },
+    "load": {
+      "paths": []
+    }
+  },
+  "session": {
+    "dmScope": "main"
+  },
+  "skills": {
+    "entries": {
+      "weather": {
+        "enabled": true
+      },
+      "web-search": {
+        "enabled": true
+      }
+    }
+  },
+  "talk": {
+    "interruptOnSpeech": false,
+    "provider": "system",
+    "providers": {
+      "system": {
+        "enabled": true
+      }
+    }
+  },
+  "tools": {
+    "fs": {
+      "workspaceOnly": true
+    },
+    "media": {
+      "audio": {
+        "enabled": false
+      }
+    },
+    "profile": "full",
+    "web": {
+      "search": {
+        "enabled": true,
+        "provider": "ollama"
+      }
+    }
+  }
+}

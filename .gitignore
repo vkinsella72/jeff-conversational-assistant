@@ -1,0 +1,28 @@
+# OS junk
+.DS_Store
+._*
+Thumbs.db
+
+# Editor swap files
+*.swp
+*.bak
+*~
+*~.swp
+
+# Backup / temp
+.pre-push-backup-*
+*.tmp
+
+# Nested git (jeff-public is its own repo, not a submodule)
+jeff-public/.git/
+
+# Build pipeline tmp
+/tmp/jeff-rebuild/
+/tmp/jeff-rebuild-zip/
+/tmp/jeff-final-audit/
+/tmp/build-sfx.py
+
+# jeff-public/ is vendored into this repo at a specific snapshot.
+# The nested .git is excluded (don't nest git history) but the contents ARE tracked here.
+# Upstream: github.com/vkinsella72/jeff-public (development source)
+# Vendored at: this repo (for one-shot installs without submodule init)
